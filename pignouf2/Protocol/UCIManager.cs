@@ -67,6 +67,13 @@ namespace pignouf2.Protocol
                             Console.WriteLine(_pif.Perft(depth));
                         }
                         break;
+
+                    case "divide":
+                        if (tokens.Length > 1 && int.TryParse(tokens[1], out int depths))
+                        {
+                            Console.WriteLine(_pif.Divide(depths));
+                        }
+                        break;
                     case "test":
                         PerftTest.ALLTest();
                         break;

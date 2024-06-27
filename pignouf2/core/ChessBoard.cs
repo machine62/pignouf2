@@ -482,7 +482,88 @@ namespace pignouf2.core
                 return clone;
             }
 
+        public bool isSquareAttacked(byte Case, ChessEnum.Side side)
+        {
+            ulong CaseMask = BitOperation.SetBit(0, Case);
 
+            //on considere qu'il y a attaque, quand en positionnant sur cette case une piece, cette meme piece attaque son posisionnement (exception pion (north/south inversé))
+            // pions
+            // ttaque hors pep
+            if (side == ChessEnum.Side.WHITE)
+            {
+                //pions
+                if ((BitMoveMask.PawnMoveMaskSouth[Case] & _BPawn) != 0) // revert north/south
+                {
+                    return true;
+                }
+
+                // cavalier
+                if ((BitMoveMask.KnightMoveMask[Case] & _BKnight) != 0)
+                {
+                    return true;
+                }
+         
+                // roi
+                if ((BitMoveMask.KingMoveMask[Case] & _BBishop) != 0)
+                {
+                    return true;
+                }
+
+                // fou et reine
+                if ((BitMoveMagic.GetBishopAttacks(Case, AllOcc()) & (_BBishop | _BQueen)) != 0)
+                {
+                    return true;
+                }
+
+                // tour et reine
+                if ((BitMoveMagic.GetRookAttacks(Case, AllOcc()) & (_BRook | _BQueen)) != 0)
+                {
+                    return true;
+                }
+
+
+            }
+            if (side == ChessEnum.Side.BLACK)
+            {
+                if ((BitMoveMask.PawnMoveMaskNorth[Case] & _WPawn) != 0) // revert north/south
+                {
+                    return true;
+                }
+
+                // cavalier
+                if ((BitMoveMask.KnightMoveMask[Case] & _WKnight) != 0)
+                {
+                    return true;
+                }
+
+                //roi
+                if ((BitMoveMask.KingMoveMask[Case] & _WKing) != 0)
+                {
+                    return true;
+                }
+
+                // fou et reine
+                if ((BitMoveMagic.GetBishopAttacks(Case, AllOcc()) & (_WBishop | _WQueen)) != 0)
+                {
+                    return true;
+                }
+
+                // tour et reine
+                if ((BitMoveMagic.GetRookAttacks(Case, AllOcc()) & (_WRook | _WQueen)) != 0)
+                {
+                    return true;
+                }
+
+
+            }
+
+            // independant du coté
+            // cavalier
+
+
+            Console.WriteLine("todo : isSquareAttacked");
+            return false;
+        }
 
         public override string ToString()
         {

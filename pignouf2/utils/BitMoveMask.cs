@@ -57,8 +57,8 @@ namespace pignouf2.utils
             {
                 UInt64 pattern = BitOperation.SetBit(UInt64.MinValue, (byte)i);
 
-                ulong MaskB = ((pattern << 7) | (pattern << 9)) & ~(BitCST.col_8);
-                ulong MaskW  = ((pattern >> 7) | (pattern >> 9)) & ~(BitCST.col_1);
+                 ulong MaskB = ((pattern >> 7) | (pattern >> 9)) & ~(BitCST.col_1);
+                ulong MaskW  = ((pattern << 7) | (pattern << 9)) & ~(BitCST.col_8);
                 // les blancs peuvent attaquer de la ligne deux a sept :/
                 _PawnMoveMaskNorth[i] = MaskW;
                 _PawnMoveMaskSouth[i] = MaskB;

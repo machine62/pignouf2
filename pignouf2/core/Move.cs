@@ -38,6 +38,10 @@ namespace pignouf2.core
             IsDoublePawnPush = false;
         }
 
+        public string UciEncode()
+        {
+            return this.From.ToString()+this.To.ToString();
+        }
         public override string ToString()
         {
             string str = "";

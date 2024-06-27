@@ -45,8 +45,15 @@ namespace pignouf2
           
         }
 
+        public String Divide(int depth)
+        {
+            DivideManager P = new DivideManager(_CB);
+            return P.Divide(depth);
 
+        }
 
         
+
+
     }
 }

@@ -105,17 +105,20 @@ namespace pignouf2.test
             //perftTestStructs.Add(new PerftTestStruct() { fen = "4k3/pppppppp/8/8/8/8/PPPPPPPP/3K4 w - - 0 1", nodes = 1683599, deep = 5 });
             //  perftTestStructs.Add(new PerftTestStruct() { fen = "4k3/pppppppp/8/8/8/8/PPPPPPPP/3K4 w - - 0 1", nodes = 28677559, deep = 6 });
             //    perftTestStructs.Add(new PerftTestStruct() { fen = "4k3/pppppppp/8/8/8/8/PPPPPPPP/3K4 w - - 0 1", nodes = 479771205, deep = 7 });
+            perftTestStructs.Add(new PerftTestStruct() { fen = "7k/8/8/8/5p2/4P1P1/8/K7 b - - 0 1", nodes = 6, deep = 1 });
 
             // pion prise et push
             // "4k3/1p6/1p6/1p5p/P1P3P1/6P1/8/3K4 b - - 0 1"
-            perftTestStructs.Add(new PerftTestStruct() { fen = "7k/8/8/2p5/8/8/3P4/K7 w - - 0 1", nodes = 5, deep = 1 });
-            perftTestStructs.Add(new PerftTestStruct() { fen = "7k/8/8/2p5/3P4/8/8/K7 b - d3 0 1", nodes = 5, deep = 1 });
-           
-            
-            
-            
-             perftTestStructs.Add(new PerftTestStruct() { fen = "4k3/1p6/1p6/1p5p/P1P3P1/6P1/8/3K4 b - - 0 1", nodes = 10, deep = 1 });
-             perftTestStructs.Add(new PerftTestStruct() { fen = "4k3/1p6/1p6/1p5p/P1P3P1/6P1/8/3K4 b - - 0 1", nodes = 100, deep = 2 });
+            //perftTestStructs.Add(new PerftTestStruct() { fen = "7k/8/8/2p5/8/8/3P4/K7 w - - 0 1", nodes = 5, deep = 1 });
+            //  perftTestStructs.Add(new PerftTestStruct() { fen = "7k/8/8/2p5/3P4/8/8/K7 b - d3 0 1", nodes = 5, deep = 1 });
+            // perftTestStructs.Add(new PerftTestStruct() { fen = "1n6/2P5/8/7k/8/K7/8/8 b - - 0 1", nodes = 8, deep = 1 });
+            //   perftTestStructs.Add(new PerftTestStruct() { fen = "8/P7/8/7k/8/K7/8/8 w - - 0 1", nodes = 45, deep = 2 });
+            //   perftTestStructs.Add(new PerftTestStruct() { fen = "8/P7/8/7k/8/K7/8/8 w - - 0 1", nodes = 560, deep = 3 });
+
+
+
+            //perftTestStructs.Add(new PerftTestStruct() { fen = "4k3/1p6/1p6/1p5p/P1P3P1/6P1/8/3K4 b - - 0 1", nodes = 10, deep = 1 });
+            //perftTestStructs.Add(new PerftTestStruct() { fen = "4k3/1p6/1p6/1p5p/P1P3P1/6P1/8/3K4 b - - 0 1", nodes = 100, deep = 2 });
             // perftTestStructs.Add(new PerftTestStruct() { fen = "4k3/1p6/1p6/1p5p/P1P3P1/6P1/8/3K4 b - - 0 1", nodes = 985, deep = 3 });
             // perftTestStructs.Add(new PerftTestStruct() { fen = "4k3/1p6/1p6/1p5p/P1P3P1/6P1/8/3K4 b - - 0 1", nodes = 10061, deep = 4 });
             // perftTestStructs.Add(new PerftTestStruct() { fen = "4k3/1p6/1p6/1p5p/P1P3P1/6P1/8/3K4 b - - 0 1", nodes = 98480, deep = 5 });

@@ -1,6 +1,7 @@
 ﻿using pignouf2.utils;
 using System;
 using System.CodeDom.Compiler;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -86,18 +87,28 @@ namespace pignouf2.core
 
         public bool isLegalMove(Move move)
         {
-
-
-            return true;
-        }
+            ChessEnum.Side Trait = _CB.getChessBoardState().Trait; 
+            // on exectute le mvt, et on doit vérifier que la case du roi du coté qui vient de jouer est attaquéest attaqué ou non.
+            _CB.MakeMove(move);
+            // position du roi apres mvt
+            byte CaseKing = (ChessEnum.Side.WHITE == Trait) ? BitOperation.BitScanForward(_CB.GetWKing()) :BitOperation.BitScanForward(_CB.GetBKing());
+            _CB.UnMakeMove();
+            return !_CB.isSquareAttacked(CaseKing, Trait);
+         }
 
         private void addLegalMove(Move move)
         {
+        
             //Console.WriteLine(move.ToString());
             if (isLegalMove(move))
             {
                 _AllMoves.Add(move);
-                //Console.WriteLine(move.ToString());
+                //  Console.WriteLine(move.ToString());
+            }
+            else
+            {
+                HumanView.chessboardToHumanView(_CB);
+                Console.WriteLine(move.ToString() + " NON VALIDE ");
             }
         }
 
@@ -190,7 +201,7 @@ namespace pignouf2.core
 
         }
 
-        
+
 
         private void generateQueenMoves()
         {
@@ -290,7 +301,7 @@ namespace pignouf2.core
 
 
                     generatePawnMovesDblPush(pattern, FromSquare); // fusion possible double est simple // todo ?
-                    generatePawnMovesSimplePush(pattern, FromSquare,isPromote);
+                    generatePawnMovesSimplePush(pattern, FromSquare, isPromote);
                     generatePawnMovesAttack(FromSquare, isPromote);
                     generatePawnMovesAttackPEP(FromSquare);
 
@@ -324,9 +335,11 @@ namespace pignouf2.core
             }
             else
             {
-                pattern = BitMoveMask._PawnMoveMaskNorth[FromSquare];
+                pattern = BitMoveMask._PawnMoveMaskSouth[FromSquare];
             }
+            // HumanView.UlongToHumanView(BitOperation.SetBit(0, FromSquare));
 
+            // HumanView.UlongToHumanView(pattern);
             pattern &= DEFAll; // le masque de prise n est valide que si un adversaire est sur la case de destination
 
             generateAbstractPieceMovesRoutine(ChessEnum.Piece.PAWN, FromSquare, pattern);
@@ -343,26 +356,27 @@ namespace pignouf2.core
             {
                 movePattern = (pattern >> 8) & ~AllOcc;
             }
-           
+
 
             if (movePattern != 0)
             {
-                
+
                 if (isPromote)
                 {
-                    foreach (ChessEnum.Piece p in Enum.GetValues(typeof(ChessEnum.Piece)))
+                    for (int p = (int)ChessEnum.Piece.KNIGHT; p <= (int)ChessEnum.Piece.QUEEN; p++)
                     {
-                    Move M = new Move();
-                    M.From = (ChessEnum.Cases)FromSquare;
-                    M.To = (ChessEnum.Cases)BitOperation.BitScanForward(movePattern);
-                    M.Piece = ChessEnum.Piece.PAWN;
-                    M.CapturedPiece = Piece.NONE;
-                    M.IsDoublePawnPush = false;
-                    M.IsPromotion = true;
-                    M.PromotionPiece = p;
+                        Move M = new Move();
+                        M.From = (ChessEnum.Cases)FromSquare;
+                        M.To = (ChessEnum.Cases)BitOperation.BitScanForward(movePattern);
+                        M.Piece = ChessEnum.Piece.PAWN;
+                        M.CapturedPiece = Piece.NONE;
+                        M.IsDoublePawnPush = false;
+                        M.IsPromotion = true;
+                        M.PromotionPiece = (ChessEnum.Piece)p;
 
-                    addLegalMove(M);
+                        addLegalMove(M);
                     }
+
                 }
                 else
                 {
@@ -387,13 +401,13 @@ namespace pignouf2.core
             // personne sur +8 +16 | -8 -16
             // cf https://www.chessprogramming.org/General_Setwise_Operations#OneStepOnly
             //https://www.chessprogramming.org/Pawn_Pushes_(Bitboards)
-    
+
             UInt64 movePattern = 0;
             ChessEnum.Cases casforPEP = Cases.none;
             if (_CB.getChessBoardState().Trait == ChessEnum.Side.WHITE)
             {
                 pattern = pattern & BitCST.lig_2;
-                
+
                 if (pattern != 0)
                 {
                     // le pion doit etre sur la suxieme ligne
@@ -414,7 +428,7 @@ namespace pignouf2.core
 
                 }
             }
-             if (movePattern != 0)
+            if (movePattern != 0)
             {
                 // il y a un seulm bit de present c un simple push
                 Move M = new Move();
@@ -423,7 +437,7 @@ namespace pignouf2.core
                 M.Piece = ChessEnum.Piece.PAWN;
                 M.IsDoublePawnPush = true;
                 M.CaseEnPassant = casforPEP;
-          
+
                 addLegalMove(M);
             }
 
