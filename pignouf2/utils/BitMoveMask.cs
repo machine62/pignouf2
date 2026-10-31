@@ -57,8 +57,11 @@ namespace pignouf2.utils
             {
                 UInt64 pattern = BitOperation.SetBit(UInt64.MinValue, (byte)i);
 
-                 ulong MaskB = ((pattern >> 7) | (pattern >> 9)) & ~(BitCST.col_1);
-                ulong MaskW  = ((pattern << 7) | (pattern << 9)) & ~(BitCST.col_8);
+                // le masque anti wrap s applique sur la case de depart (avant le decalage), pas sur le resultat
+                // attaque vers le sud : >>7 = +1 col (wrap depuis h exclu par ~col_8), >>9 = -1 col (wrap depuis a exclu par ~col_1)
+                ulong MaskB = ((pattern & ~BitCST.col_8) >> 7) | ((pattern & ~BitCST.col_1) >> 9);
+                // attaque vers le nord : <<9 = +1 col (wrap depuis h exclu par ~col_8), <<7 = -1 col (wrap depuis a exclu par ~col_1)
+                ulong MaskW  = ((pattern & ~BitCST.col_8) << 9) | ((pattern & ~BitCST.col_1) << 7);
                 // les blancs peuvent attaquer de la ligne deux a sept :/
                 _PawnMoveMaskNorth[i] = MaskW;
                 _PawnMoveMaskSouth[i] = MaskB;
@@ -73,19 +76,21 @@ namespace pignouf2.utils
                 UInt64 Mask = 0;
                 Mask |= ((ulong)1 << i);
 
-                UInt64 pattern1 = 0;
-                UInt64 pattern2 = 0;
+                UInt64 pattern = 0;
+                // +2 ligues +1 col et -2 ligues +1 col : wrap depuis la colonne h
+                pattern |= (Mask & ~BitCST.col_8) << 17;
+                pattern |= (Mask & ~BitCST.col_8) >> 15;
+                // +1 ligue +2 cols et -1 ligue +2 cols : wrap depuis les colonnes g et h
+                pattern |= (Mask & ~(BitCST.col_7 | BitCST.col_8)) << 10;
+                pattern |= (Mask & ~(BitCST.col_7 | BitCST.col_8)) >> 6;
+                // +2 ligues -1 col et -2 ligues -1 col : wrap depuis la colonne a
+                pattern |= (Mask & ~BitCST.col_1) << 15;
+                pattern |= (Mask & ~BitCST.col_1) >> 17;
+                // +1 ligue -2 cols et -1 ligue -2 cols : wrap depuis les colonnes a et b
+                pattern |= (Mask & ~(BitCST.col_1 | BitCST.col_2)) << 6;
+                pattern |= (Mask & ~(BitCST.col_1 | BitCST.col_2)) >> 10;
 
-
-                pattern1 = (((Mask << 10) | (Mask >> 6)) & ~(BitCST.col_2));
-                pattern1 = (pattern1 | ((Mask << 17) | (Mask >> 15))) & ~(BitCST.col_1);
-
-                pattern2 = (((Mask >> 10) | (Mask << 6)) & ~(BitCST.col_7));
-                pattern2 = (pattern2 | ((Mask >> 17) | (Mask << 15))) & ~(BitCST.col_8);
-
-
-                Mask = pattern1 | pattern2;
-                _KnightMoveMask[i] = Mask;
+                _KnightMoveMask[i] = pattern;
 
                // HumanView.UlongToHumanView(_KnightMoveMask[i]);
 
@@ -102,8 +107,11 @@ namespace pignouf2.utils
                 Mask |= ((ulong)1 << i);
 
                 // on effectue une horizontale de 3 bit
-                Mask = Mask | (Mask << 1) & ~BitCST.col_1;
-                Mask = Mask | (Mask >> 1) & ~BitCST.col_8;
+                // le masque anti wrap s applique sur la case de depart avant le decalage
+                // <<1 decale vers la colonne h : le wrap h vers a est exclu par ~col_8
+                Mask = Mask | ((Mask & ~BitCST.col_8) << 1);
+                // >>1 decale vers la colonne a : le wrap a vers h est exclu par ~col_1
+                Mask = Mask | ((Mask & ~BitCST.col_1) >> 1);
 
                 // on decale de +8 et de - 8
                 Mask = Mask | (Mask << 8) | (Mask >> 8);
