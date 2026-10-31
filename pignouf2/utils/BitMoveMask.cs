@@ -76,6 +76,7 @@ namespace pignouf2.utils
                 UInt64 Mask = 0;
                 Mask |= ((ulong)1 << i);
 
+                // chaque decalage a son propre masque anti wrap applique sur la case de depart avant le decalage
                 UInt64 pattern = 0;
                 // +2 ligues +1 col et -2 ligues +1 col : wrap depuis la colonne h
                 pattern |= (Mask & ~BitCST.col_8) << 17;
