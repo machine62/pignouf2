@@ -92,23 +92,18 @@ namespace pignouf2.core
             _CB.MakeMove(move);
             // position du roi apres mvt
             byte CaseKing = (ChessEnum.Side.WHITE == Trait) ? BitOperation.BitScanForward(_CB.GetWKing()) :BitOperation.BitScanForward(_CB.GetBKing());
+            // on teste l attaque sur la position apres le coup, avant de restaurer l etat
+            bool attaque = _CB.isSquareAttacked(CaseKing, Trait);
             _CB.UnMakeMove();
-            return !_CB.isSquareAttacked(CaseKing, Trait);
+            return !attaque;
          }
 
         private void addLegalMove(Move move)
         {
-        
-            //Console.WriteLine(move.ToString());
+            // on ne garde que les coups legaux : apres le coup notre roi ne doit pas etre attaque
             if (isLegalMove(move))
             {
                 _AllMoves.Add(move);
-                //  Console.WriteLine(move.ToString());
-            }
-            else
-            {
-                HumanView.chessboardToHumanView(_CB);
-                Console.WriteLine(move.ToString() + " NON VALIDE ");
             }
         }
 

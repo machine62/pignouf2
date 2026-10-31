@@ -504,7 +504,7 @@ namespace pignouf2.core
                 }
          
                 // roi
-                if ((BitMoveMask.KingMoveMask[Case] & _BBishop) != 0)
+                if ((BitMoveMask.KingMoveMask[Case] & _BKing) != 0)
                 {
                     return true;
                 }
@@ -557,11 +557,6 @@ namespace pignouf2.core
 
             }
 
-            // independant du coté
-            // cavalier
-
-
-            Console.WriteLine("todo : isSquareAttacked");
             return false;
         }
 
