@@ -611,8 +611,9 @@ namespace pignouf2.core
                 ChessBoard clone = (ChessBoard)this.MemberwiseClone();
                 clone._CBState = this._CBState.Clone();
 
-                // histoire de la partie :
-                clone.moveHistory = new Stack<Move>(new Stack<Move>(this.moveHistory));
+                // histoire de la partie : on copie les piles en preservant l ordre (le top reste le top)
+                clone.moveHistory = new Stack<Move>(this.moveHistory.Reverse());
+                clone.CBStateHistory = new Stack<ChessBoardState>(this.CBStateHistory.Reverse());
 
                 return clone;
             }

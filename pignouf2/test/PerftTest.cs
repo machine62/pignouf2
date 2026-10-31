@@ -1,4 +1,4 @@
-﻿using pignouf2.Protocol;
+using pignouf2.Protocol;
 using pignouf2.utils;
 using System;
 using System.Collections.Generic;
@@ -6,8 +6,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
-using static pignouf2.test.PerftTest;
 
 namespace pignouf2.test
 {
@@ -18,168 +16,74 @@ namespace pignouf2.test
 
         static List<PerftTestStruct> perftTestStructs = new List<PerftTestStruct>();
 
-
-
         public static void ALLTest()
         {
             perftTestStructs = new List<PerftTestStruct>();
             Console.WriteLine("PerftTest");
             TEST();
-
-
-
+            Console.WriteLine($"Resultat : {_success} SUCCESS / {_fail} FAIL");
         }
-
-
-
-
-
 
         private static void TEST()
         {
-
-            Console.WriteLine("KingTest");
-            perftTestStructs = new List<PerftTestStruct>();
-
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "7k/8/8/8/8/8/8/K7 w - - 0 1", nodes = 3, deep = 1 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "7k/8/8/8/8/8/8/K7 w - - 0 1", nodes = 9, deep = 2 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "7k/8/8/8/8/8/8/K7 w - - 0 1", nodes = 54, deep = 3 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "7k/8/8/8/8/8/8/K7 w - - 0 1", nodes = 324, deep = 4 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "7k/8/8/8/8/8/8/K7 w - - 0 1", nodes = 1890, deep = 5 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "7k/8/8/8/8/8/8/K7 w - - 0 1", nodes = 11024, deep = 6 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "7k/8/8/8/8/8/8/K7 w - - 0 1", nodes = 71758, deep = 7 });
-
-            //  Console.WriteLine("KnightTest");
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "6NK/6NN/8/8/8/8/nn6/kn6 b - - 0 1", nodes = 10, deep = 1 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "6NK/6NN/8/8/8/8/nn6/kn6 b - - 0 1", nodes = 100, deep = 2 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "6NK/6NN/8/8/8/8/nn6/kn6 b - - 0 1", nodes = 1320, deep = 3 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "6NK/6NN/8/8/8/8/nn6/kn6 b - - 0 1", nodes = 17424, deep = 4 });
-
-            // king + knghit - pb trait / switch perft2
-
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "6NK/6NN/8/8/8/8/8/kn6 b - - 0 1", nodes = 5, deep = 1 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "6NK/6NN/8/8/8/8/8/kn6 b - - 0 1", nodes = 50, deep = 2 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "6NK/6NN/8/8/8/8/8/kn6 b - - 0 1", nodes = 440, deep = 3 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "6NK/6NN/8/8/8/8/8/kn6 b - - 0 1", nodes = 5808, deep = 4 });
-
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "6N1/6K1/8/8/8/8/8/k7 w - - 0 1", nodes = 10, deep = 1 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "6N1/6K1/8/8/8/8/8/k7 w - - 0 1", nodes = 30, deep = 2 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "6N1/6K1/8/8/8/8/8/k7 w - - 0 1", nodes = 291, deep = 3 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "6N1/6K1/8/8/8/8/8/k7 w - - 0 1", nodes = 1743, deep = 4 });
-
-
-            /// bishop'B7/8/8/8/8/8/8/8 w - - 0 1'
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "B7/8/8/8/8/8/8/b7 b - - 0 1", nodes = 7, deep = 1 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "6bk/6bb/8/4n3/8/2N5/BB6/KB6 w - - 0 1", nodes = 20, deep = 1 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "6bk/6bb/8/4n3/8/2N5/BB6/KB6 w - - 0 1", nodes = 416, deep = 2 });
-
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "7b/6k1/8/8/K7/8/8/8 b - - 0 1", nodes = 35, deep = 2 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "7b/6k1/8/8/K7/8/8/8 b - - 0 1", nodes = 425, deep = 3 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "7b/6k1/8/8/K7/8/8/8 b - - 0 1", nodes = 2546, deep = 4 });
-
-
-            //rookr7/8/8/8/8/8/8/8 w - - 0 1
-            // perftTestStructs.Add(new PerftTestStruct() { fen = "4nr2/5k2/8/8/8/K7/8/8 b - - 0 1", nodes = 12, deep = 1 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "4nr2/5k2/8/8/8/K7/8/8 b - - 0 1", nodes = 60, deep = 2 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "4nr2/5k2/8/8/8/K7/8/8 b - - 0 1", nodes = 1135, deep = 3 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "4nr2/5k2/8/8/8/K7/8/8 w - - 0 1", nodes = 7589, deep = 4 });
-
-            //queen 3k4/8/3q4/8/8/8/8/8 w - - 0 1
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "3k4/8/3q4/8/8/8/8/8 b - - 0 1", nodes = 23, deep = 1 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "q6k/8/8/8/8/NNNN4/NNNN4/NKNN4 w - - 0 1", nodes = 23, deep = 1 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "q6k/8/8/8/8/NNNN4/NNNN4/NKNN4 w - - 0 1", nodes = 474, deep = 2 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "q6k/8/8/8/8/NNNN4/NNNN4/NKNN4 w - - 0 1", nodes = 11558, deep = 3 });
-
-            //pions 7k/7p/8/8/8/P7/8/K7 w - - 0 1 => push / dbl push
-            //            //perftTestStructs.Add(new PerftTestStruct() { fen = "7k/7p/8/8/8/P7/8/K7 w - - 0 1", nodes = 4, deep = 1 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "7k/7p/8/8/8/P7/8/K7 w - - 0 1", nodes = 16, deep = 2 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "7k/7p/8/8/8/P7/8/K7 w - - 0 1", nodes = 92, deep = 3 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "7k/7p/8/8/8/P7/8/K7 w - - 0 1", nodes = 529, deep = 4 });
-
-            //pions 7k/7p/8/8/8/P7/8/K7 w - - 0 1 => push / dbl push / prise / prise en passant 
-            //4k3/pppppppp/8/8/8/8/PPPPPPPP/3K4 w - - 0 1
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "4k3/pppppppp/8/8/8/8/PPPPPPPP/3K4 w - - 0 1", nodes = 18, deep = 1 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "4k3/pppppppp/8/8/8/8/PPPPPPPP/3K4 w - - 0 1", nodes = 324, deep = 2 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "4k3/pppppppp/8/8/8/8/PPPPPPPP/3K4 w - - 0 1", nodes = 5658, deep = 3 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "4k3/pppppppp/8/8/8/8/PPPPPPPP/3K4 w - - 0 1", nodes = 98766, deep = 4 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "4k3/pppppppp/8/8/8/8/PPPPPPPP/3K4 w - - 0 1", nodes = 1683599, deep = 5 });
-            //  perftTestStructs.Add(new PerftTestStruct() { fen = "4k3/pppppppp/8/8/8/8/PPPPPPPP/3K4 w - - 0 1", nodes = 28677559, deep = 6 });
-            //    perftTestStructs.Add(new PerftTestStruct() { fen = "4k3/pppppppp/8/8/8/8/PPPPPPPP/3K4 w - - 0 1", nodes = 479771205, deep = 7 });
-            perftTestStructs.Add(new PerftTestStruct() { fen = "7k/8/8/8/5p2/4P1P1/8/K7 b - - 0 1", nodes = 6, deep = 1 });
-
-            // pion prise et push
-            // "4k3/1p6/1p6/1p5p/P1P3P1/6P1/8/3K4 b - - 0 1"
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "7k/8/8/2p5/8/8/3P4/K7 w - - 0 1", nodes = 5, deep = 1 });
-            //  perftTestStructs.Add(new PerftTestStruct() { fen = "7k/8/8/2p5/3P4/8/8/K7 b - d3 0 1", nodes = 5, deep = 1 });
-            // perftTestStructs.Add(new PerftTestStruct() { fen = "1n6/2P5/8/7k/8/K7/8/8 b - - 0 1", nodes = 8, deep = 1 });
-            //   perftTestStructs.Add(new PerftTestStruct() { fen = "8/P7/8/7k/8/K7/8/8 w - - 0 1", nodes = 45, deep = 2 });
-            //   perftTestStructs.Add(new PerftTestStruct() { fen = "8/P7/8/7k/8/K7/8/8 w - - 0 1", nodes = 560, deep = 3 });
-
-
-
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "4k3/1p6/1p6/1p5p/P1P3P1/6P1/8/3K4 b - - 0 1", nodes = 10, deep = 1 });
-            //perftTestStructs.Add(new PerftTestStruct() { fen = "4k3/1p6/1p6/1p5p/P1P3P1/6P1/8/3K4 b - - 0 1", nodes = 100, deep = 2 });
-            // perftTestStructs.Add(new PerftTestStruct() { fen = "4k3/1p6/1p6/1p5p/P1P3P1/6P1/8/3K4 b - - 0 1", nodes = 985, deep = 3 });
-            // perftTestStructs.Add(new PerftTestStruct() { fen = "4k3/1p6/1p6/1p5p/P1P3P1/6P1/8/3K4 b - - 0 1", nodes = 10061, deep = 4 });
-            // perftTestStructs.Add(new PerftTestStruct() { fen = "4k3/1p6/1p6/1p5p/P1P3P1/6P1/8/3K4 b - - 0 1", nodes = 98480, deep = 5 });
-
-
-            // speed : Test 1/11 - SUCCESS : attendu 4 / resultat 4  - Time: 62 ms
-            //Test 2 / 11 - SUCCESS : attendu 16 / resultat 16 - Time: 45 ms
-            //Test 3 / 11 - SUCCESS : attendu 92 / resultat 92 - Time: 45 ms
-            //Test 4 / 11 - SUCCESS : attendu 529 / resultat 529 - Time: 47 ms
-            //Test 5 / 11 - SUCCESS : attendu 18 / resultat 18 - Time: 46 ms
-            //Test 6 / 11 - SUCCESS : attendu 324 / resultat 324 - Time: 46 ms
-            //Test 7 / 11 - FAIL : attentu 5658 / resultat 5652 - Time: 74 ms
-            //Test 8 / 11 - FAIL : attentu 98766 / resultat 98596 - Time: 283 ms
-            //Test 9 / 11 - FAIL : attentu 1683599 / resultat 1674844 - Time: 2643 ms
-            //Test 10 / 11 - FAIL : attentu 28677559 / resultat 28448404 - Time: 46466 ms
-
-
+            // les 6 positions de reference chessprogramming.org (perft results)
+            // startpos
+            perftTestStructs.Add(new PerftTestStruct() { fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", nodes = 20, deep = 1 });
+            perftTestStructs.Add(new PerftTestStruct() { fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", nodes = 400, deep = 2 });
+            perftTestStructs.Add(new PerftTestStruct() { fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", nodes = 8902, deep = 3 });
+            perftTestStructs.Add(new PerftTestStruct() { fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", nodes = 197281, deep = 4 });
+            // kiwipete (roques + echecs)
+            perftTestStructs.Add(new PerftTestStruct() { fen = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1", nodes = 48, deep = 1 });
+            perftTestStructs.Add(new PerftTestStruct() { fen = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1", nodes = 2039, deep = 2 });
+            perftTestStructs.Add(new PerftTestStruct() { fen = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1", nodes = 97862, deep = 3 });
+            // position 3 (ep + epingles)
+            perftTestStructs.Add(new PerftTestStruct() { fen = "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1", nodes = 14, deep = 1 });
+            perftTestStructs.Add(new PerftTestStruct() { fen = "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1", nodes = 191, deep = 2 });
+            perftTestStructs.Add(new PerftTestStruct() { fen = "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1", nodes = 2812, deep = 3 });
+            perftTestStructs.Add(new PerftTestStruct() { fen = "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1", nodes = 43238, deep = 4 });
+            // position 4 (promotions massives)
+            perftTestStructs.Add(new PerftTestStruct() { fen = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1", nodes = 6, deep = 1 });
+            perftTestStructs.Add(new PerftTestStruct() { fen = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1", nodes = 264, deep = 2 });
+            perftTestStructs.Add(new PerftTestStruct() { fen = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1", nodes = 9467, deep = 3 });
+            // position 5 (ep + roque combines)
+            perftTestStructs.Add(new PerftTestStruct() { fen = "rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8", nodes = 44, deep = 1 });
+            perftTestStructs.Add(new PerftTestStruct() { fen = "rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8", nodes = 1486, deep = 2 });
+            perftTestStructs.Add(new PerftTestStruct() { fen = "rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8", nodes = 62379, deep = 3 });
+            // position 6 (mediane)
+            perftTestStructs.Add(new PerftTestStruct() { fen = "r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10", nodes = 46, deep = 1 });
+            perftTestStructs.Add(new PerftTestStruct() { fen = "r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10", nodes = 2079, deep = 2 });
+            perftTestStructs.Add(new PerftTestStruct() { fen = "r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10", nodes = 89890, deep = 3 });
 
             int nb = 1;
-      
             foreach (var perftTest in perftTestStructs)
             {
-
                 Pignouf pif = new Pignouf();
                 FenParser FenP = new utils.FenParser(perftTest.fen);
-
                 pif.setFEN(FenP);
-               
+
                 PerftManager P = new PerftManager(pif.getChessBoard());
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
-              long NodesResult =   P.Perft2(perftTest.deep);
-
+                long NodesResult = P.Perft2(perftTest.deep);
                 stopwatch.Stop();
-                long elapsed = stopwatch.ElapsedMilliseconds ;
+                long elapsed = stopwatch.ElapsedMilliseconds;
                 long speed = 0;
                 if (elapsed != 0)
                 {
                     speed = NodesResult * 1000 / elapsed;
                 }
-                if (NodesResult==perftTest.nodes)
+                if (NodesResult == perftTest.nodes)
                 {
                     Console.WriteLine($"Test {nb}/{perftTestStructs.Count} - SUCCESS : attendu {perftTest.nodes} / resultat {NodesResult}  - Time: {elapsed} ms - vitesse  ({speed} n/s)");
-                    
                     _success++;
-
                 }
                 else
                 {
                     Console.WriteLine($"Test {nb}/{perftTestStructs.Count} - FAIL : attentu {perftTest.nodes} / resultat {NodesResult}  - Time: {elapsed} ms - vitesse ({speed} n/s)");
-
                     _fail++;
                 }
                 nb++;
             }
-
-
-
-
-
-
         }
 
         public struct PerftTestStruct()
@@ -188,7 +92,5 @@ namespace pignouf2.test
             public long nodes;
             public int deep;
         }
-
-
     }
 }

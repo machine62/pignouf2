@@ -85,7 +85,11 @@ namespace pignouf2.core
             // commeun a tous les coups
             // changement de trait apres tous les calcul de legalité et d actualisation etat
             Trait = Trait == ChessEnum.Side.WHITE ? ChessEnum.Side.BLACK : ChessEnum.Side.WHITE;
-            DemiCoup++;
+            // le compteur de demi-coups (regle des 50 coups) retombe a 0 sur capture ou push de pion (pas sur le roque)
+            if (move.Piece == ChessEnum.Piece.PAWN || move.CapturedPiece != ChessEnum.Piece.NONE || move.IsEnPassant)
+                DemiCoup = 0;
+            else
+                DemiCoup++;
             // si trait au blanc c'est un nouveau coup
            
 

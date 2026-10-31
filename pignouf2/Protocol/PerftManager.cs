@@ -1,5 +1,4 @@
 ﻿using pignouf2.core;
-using pignouf2.test;
 using pignouf2.utils;
 using System;
 using System.Collections.Generic;
@@ -49,16 +48,9 @@ namespace pignouf2.Protocol
 
                 foreach (var move in moves)
                 {
-                    // vérification de makeunmake :
-                    ChessBoard chessboardToTestmoveunmove = _ChessBoard.Clone();
-                    ChessboardTest.TestMakeAndUnmakeMove(chessboardToTestmoveunmove, move);
-                    // fin vérification de makeunmake :
-
                     _ChessBoard.MakeMove(move);
                     nodes += Perft2(depth - 1);
-
                     _ChessBoard.UnMakeMove();
-
                 }
             }
             return nodes;
