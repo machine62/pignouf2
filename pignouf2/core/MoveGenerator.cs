@@ -202,11 +202,13 @@ namespace pignouf2.core
         {
             if (ATTQueen != 0)
             {
-                byte FromSquare = BitOperation.BitScanForwardWithReset(ref ATTQueen); // on recupere la case de la piece
-                ulong pattern = BitMoveMagic.GetBishopAttacks(FromSquare, AllOcc) | BitMoveMagic.GetRookAttacks(FromSquare, AllOcc); // pattern de mouvement
+                do
+                {
+                    byte FromSquare = BitOperation.BitScanForwardWithReset(ref ATTQueen); // on recupere la case de la piece
+                    ulong pattern = BitMoveMagic.GetBishopAttacks(FromSquare, AllOcc) | BitMoveMagic.GetRookAttacks(FromSquare, AllOcc); // pattern de mouvement
 
-                generateAbstractPieceMovesRoutine(ChessEnum.Piece.QUEEN, FromSquare, pattern);
-
+                    generateAbstractPieceMovesRoutine(ChessEnum.Piece.QUEEN, FromSquare, pattern);
+                } while (ATTQueen != 0); // il peut y avoir plusieurs dames (promotions)
             }
 
         }

@@ -55,9 +55,6 @@ namespace pignouf2.core
                     WhiteGR = false;
                     WhitePR = false;
                 }
-                // si une tour bouge de sa case de depart ou y est capturee on perd le droit de roque correspondant
-                if (move.From == Cases.A1 || move.To == Cases.A1) WhiteGR = false;
-                if (move.From == Cases.H1 || move.To == Cases.H1) WhitePR = false;
             }
             else
             {
@@ -67,9 +64,13 @@ namespace pignouf2.core
                     BlackGR = false;
                     BlackPR = false;
                 }
-                if (move.From == Cases.A8 || move.To == Cases.A8) BlackGR = false;
-                if (move.From == Cases.H8 || move.To == Cases.H8) BlackPR = false;
             }
+            // si une tour bouge de sa case de depart ou y est capturee on perd le droit de roque correspondant
+            // (teste quel que soit le camp qui joue : un blanc peut capturer la tour noire en a8/h8 et inversement)
+            if (move.From == Cases.A1 || move.To == Cases.A1) WhiteGR = false;
+            if (move.From == Cases.H1 || move.To == Cases.H1) WhitePR = false;
+            if (move.From == Cases.A8 || move.To == Cases.A8) BlackGR = false;
+            if (move.From == Cases.H8 || move.To == Cases.H8) BlackPR = false;
 
 
 
