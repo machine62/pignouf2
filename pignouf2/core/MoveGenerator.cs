@@ -397,7 +397,30 @@ namespace pignouf2.core
             // HumanView.UlongToHumanView(pattern);
             pattern &= DEFAll; // le masque de prise n est valide que si un adversaire est sur la case de destination
 
-            generateAbstractPieceMovesRoutine(ChessEnum.Piece.PAWN, FromSquare, pattern);
+            if (isPromote)
+            {
+                // promotion avec capture : les 4 pieces au choix pour chaque case d attaque
+                ulong att = pattern;
+                while (att != 0)
+                {
+                    ChessEnum.Cases to = (ChessEnum.Cases)BitOperation.BitScanForwardWithReset(ref att);
+                    for (int p = (int)ChessEnum.Piece.KNIGHT; p <= (int)ChessEnum.Piece.QUEEN; p++)
+                    {
+                        Move M = new Move();
+                        M.From = (ChessEnum.Cases)FromSquare;
+                        M.To = to;
+                        M.Piece = ChessEnum.Piece.PAWN;
+                        M.CapturedPiece = GetPieceAt(to);
+                        M.IsPromotion = true;
+                        M.PromotionPiece = (ChessEnum.Piece)p;
+                        addLegalMove(M);
+                    }
+                }
+            }
+            else
+            {
+                generateAbstractPieceMovesRoutine(ChessEnum.Piece.PAWN, FromSquare, pattern);
+            }
         }
 
         private void generatePawnMovesSimplePush(UInt64 pattern, byte FromSquare, bool isPromote)

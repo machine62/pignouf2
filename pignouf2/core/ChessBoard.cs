@@ -278,6 +278,33 @@ namespace pignouf2.core
 
              // ----------------  BLACK SIDE FIN ------------------------
 
+            // promotion : on enleve le pion pose par le switch et on met la piece promue a la place
+            if (move.IsPromotion)
+            {
+                if (side == ChessEnum.Side.WHITE)
+                {
+                    _WPawn &= ~toMask;
+                    switch (move.PromotionPiece)
+                    {
+                        case ChessEnum.Piece.QUEEN: _WQueen |= toMask; break;
+                        case ChessEnum.Piece.ROOK: _WRook |= toMask; break;
+                        case ChessEnum.Piece.BISHOP: _WBishop |= toMask; break;
+                        case ChessEnum.Piece.KNIGHT: _WKnight |= toMask; break;
+                    }
+                }
+                else
+                {
+                    _BPawn &= ~toMask;
+                    switch (move.PromotionPiece)
+                    {
+                        case ChessEnum.Piece.QUEEN: _BQueen |= toMask; break;
+                        case ChessEnum.Piece.ROOK: _BRook |= toMask; break;
+                        case ChessEnum.Piece.BISHOP: _BBishop |= toMask; break;
+                        case ChessEnum.Piece.KNIGHT: _BKnight |= toMask; break;
+                    }
+                }
+            }
+
             // prise en passant : le pion capture n est pas sur la case d arrivee mais derriere
             if (move.IsEnPassant)
             {
@@ -463,6 +490,31 @@ namespace pignouf2.core
 
                 }
             }
+
+                // promotion : on enleve la piece promue de la case d arrivee (le pion est remis par le switch ci-dessus)
+                if (lastMove.IsPromotion)
+                {
+                    if (side == ChessEnum.Side.WHITE)
+                    {
+                        switch (lastMove.PromotionPiece)
+                        {
+                            case ChessEnum.Piece.QUEEN: _WQueen &= ~toMask; break;
+                            case ChessEnum.Piece.ROOK: _WRook &= ~toMask; break;
+                            case ChessEnum.Piece.BISHOP: _WBishop &= ~toMask; break;
+                            case ChessEnum.Piece.KNIGHT: _WKnight &= ~toMask; break;
+                        }
+                    }
+                    else
+                    {
+                        switch (lastMove.PromotionPiece)
+                        {
+                            case ChessEnum.Piece.QUEEN: _BQueen &= ~toMask; break;
+                            case ChessEnum.Piece.ROOK: _BRook &= ~toMask; break;
+                            case ChessEnum.Piece.BISHOP: _BBishop &= ~toMask; break;
+                            case ChessEnum.Piece.KNIGHT: _BKnight &= ~toMask; break;
+                        }
+                    }
+                }
 
                 // prise en passant : on remet le pion capture sur la case derriere
                 if (lastMove.IsEnPassant)
