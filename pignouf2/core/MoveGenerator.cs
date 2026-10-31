@@ -196,7 +196,7 @@ namespace pignouf2.core
                     addLegalMove(M);
 
 
-                } while (PatternQuiet != 0);
+                } while (PatternATT != 0); // on boucle sur le pattern d attaque, pas sur le pattern quiet
             }
 
         }
