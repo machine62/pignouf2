@@ -278,6 +278,47 @@ namespace pignouf2.core
 
              // ----------------  BLACK SIDE FIN ------------------------
 
+            // prise en passant : le pion capture n est pas sur la case d arrivee mais derriere
+            if (move.IsEnPassant)
+            {
+                ChessEnum.Cases capturedSquare = side == ChessEnum.Side.WHITE ? (ChessEnum.Cases)((int)to - 8) : (ChessEnum.Cases)((int)to + 8);
+                ulong capMask = 1UL << (int)capturedSquare;
+                if (side == ChessEnum.Side.WHITE)
+                    _BPawn &= ~capMask;
+                else
+                    _WPawn &= ~capMask;
+            }
+
+            // roque : la tour accompagne le roi
+            if (move.IsCastling)
+            {
+                if (side == ChessEnum.Side.WHITE)
+                {
+                    if (to == ChessEnum.Cases.G1) // petit roque : h1 -> f1
+                    {
+                        _WRook &= ~(1UL << (int)ChessEnum.Cases.H1);
+                        _WRook |= (1UL << (int)ChessEnum.Cases.F1);
+                    }
+                    else // grand roque : a1 -> d1
+                    {
+                        _WRook &= ~(1UL << (int)ChessEnum.Cases.A1);
+                        _WRook |= (1UL << (int)ChessEnum.Cases.D1);
+                    }
+                }
+                else
+                {
+                    if (to == ChessEnum.Cases.G8) // petit roque : h8 -> f8
+                    {
+                        _BRook &= ~(1UL << (int)ChessEnum.Cases.H8);
+                        _BRook |= (1UL << (int)ChessEnum.Cases.F8);
+                    }
+                    else // grand roque : a8 -> d8
+                    {
+                        _BRook &= ~(1UL << (int)ChessEnum.Cases.A8);
+                        _BRook |= (1UL << (int)ChessEnum.Cases.D8);
+                    }
+                }
+            }
 
             // todo actualisation et historisation du state
             _CBState.MakeMove(move);
@@ -423,6 +464,48 @@ namespace pignouf2.core
                 }
             }
 
+                // prise en passant : on remet le pion capture sur la case derriere
+                if (lastMove.IsEnPassant)
+                {
+                    ChessEnum.Cases capturedSquare = side == ChessEnum.Side.WHITE ? (ChessEnum.Cases)((int)lastMove.To - 8) : (ChessEnum.Cases)((int)lastMove.To + 8);
+                    ulong capMask = 1UL << (int)capturedSquare;
+                    if (side == ChessEnum.Side.WHITE)
+                        _BPawn |= capMask;
+                    else
+                        _WPawn |= capMask;
+                }
+
+                // roque : on remet la tour sur sa case de depart
+                if (lastMove.IsCastling)
+                {
+                    if (side == ChessEnum.Side.WHITE)
+                    {
+                        if (lastMove.To == ChessEnum.Cases.G1) // petit roque : f1 -> h1
+                        {
+                            _WRook |= (1UL << (int)ChessEnum.Cases.H1);
+                            _WRook &= ~(1UL << (int)ChessEnum.Cases.F1);
+                        }
+                        else // grand roque : d1 -> a1
+                        {
+                            _WRook |= (1UL << (int)ChessEnum.Cases.A1);
+                            _WRook &= ~(1UL << (int)ChessEnum.Cases.D1);
+                        }
+                    }
+                    else
+                    {
+                        if (lastMove.To == ChessEnum.Cases.G8) // petit roque : f8 -> h8
+                        {
+                            _BRook |= (1UL << (int)ChessEnum.Cases.H8);
+                            _BRook &= ~(1UL << (int)ChessEnum.Cases.F8);
+                        }
+                        else // grand roque : d8 -> a8
+                        {
+                            _BRook |= (1UL << (int)ChessEnum.Cases.A8);
+                            _BRook &= ~(1UL << (int)ChessEnum.Cases.D8);
+                        }
+                    }
+                }
+
                 /// si capture
 
              //   if (move.CapturedPiece != ChessEnum.Piece.NONE)
@@ -491,8 +574,8 @@ namespace pignouf2.core
             // ttaque hors pep
             if (side == ChessEnum.Side.WHITE)
             {
-                //pions
-                if ((BitMoveMask.PawnMoveMaskSouth[Case] & _BPawn) != 0) // revert north/south
+                //pions : un pion noir attaque vers le sud, il attaque Case s il est au nord de Case
+                if ((BitMoveMask.PawnMoveMaskNorth[Case] & _BPawn) != 0)
                 {
                     return true;
                 }
@@ -525,7 +608,8 @@ namespace pignouf2.core
             }
             if (side == ChessEnum.Side.BLACK)
             {
-                if ((BitMoveMask.PawnMoveMaskNorth[Case] & _WPawn) != 0) // revert north/south
+                // un pion blanc attaque vers le nord, il attaque Case s il est au sud de Case
+                if ((BitMoveMask.PawnMoveMaskSouth[Case] & _WPawn) != 0)
                 {
                     return true;
                 }

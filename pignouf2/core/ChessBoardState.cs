@@ -49,21 +49,26 @@ namespace pignouf2.core
 
             if (Trait == ChessEnum.Side.WHITE)
             {
-                // si coup de roi le roque est flingé
+                // si coup de roi plus aucun roque possible pour les blancs
                 if (move.Piece == ChessEnum.Piece.KING)
                 {
                     WhiteGR = false;
-                    WhiteGR = false;
+                    WhitePR = false;
                 }
+                // si une tour bouge de sa case de depart ou y est capturee on perd le droit de roque correspondant
+                if (move.From == Cases.A1 || move.To == Cases.A1) WhiteGR = false;
+                if (move.From == Cases.H1 || move.To == Cases.H1) WhitePR = false;
             }
             else
             {
-                // si coup de roi le roque est flingé
+                // si coup de roi plus aucun roque possible pour les noirs
                 if (move.Piece == ChessEnum.Piece.KING)
                 {
                     BlackGR = false;
                     BlackPR = false;
                 }
+                if (move.From == Cases.A8 || move.To == Cases.A8) BlackGR = false;
+                if (move.From == Cases.H8 || move.To == Cases.H8) BlackPR = false;
             }
 
 

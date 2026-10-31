@@ -218,9 +218,57 @@ namespace pignouf2.core
                 ulong pattern = BitMoveMask.KingMoveMask[FromSquare]; // pattern de mouvement
 
                 generateAbstractPieceMovesRoutine(ChessEnum.Piece.KING, FromSquare, pattern);
-
+                generateCastlingMoves(FromSquare);
             }
 
+        }
+
+        private void generateCastlingMoves(byte FromSquare)
+        {
+            // le roque n est possible que si le roi est sur sa case de depart
+            ChessBoardState state = _CB.getChessBoardState();
+            bool white = state.Trait == ChessEnum.Side.WHITE;
+            if (FromSquare != (byte)(white ? ChessEnum.Cases.E1 : ChessEnum.Cases.E8))
+                return;
+
+            // cases du cote roi (petit roque) et du cote dame (grand roque)
+            ChessEnum.Cases f = white ? ChessEnum.Cases.F1 : ChessEnum.Cases.F8;
+            ChessEnum.Cases g = white ? ChessEnum.Cases.G1 : ChessEnum.Cases.G8;
+            ChessEnum.Cases b = white ? ChessEnum.Cases.B1 : ChessEnum.Cases.B8;
+            ChessEnum.Cases c = white ? ChessEnum.Cases.C1 : ChessEnum.Cases.C8;
+            ChessEnum.Cases d = white ? ChessEnum.Cases.D1 : ChessEnum.Cases.D8;
+
+            // petit roque : f et g vides, e f g non attaquees
+            if ((white ? state.WhitePR : state.BlackPR)
+                && (AllOcc & (BitOperation.SetBit(0, (byte)f) | BitOperation.SetBit(0, (byte)g))) == 0
+                && !_CB.isSquareAttacked(FromSquare, state.Trait)
+                && !_CB.isSquareAttacked((byte)f, state.Trait)
+                && !_CB.isSquareAttacked((byte)g, state.Trait))
+            {
+                Move M = new Move();
+                M.From = (ChessEnum.Cases)FromSquare;
+                M.To = g;
+                M.Piece = ChessEnum.Piece.KING;
+                M.CapturedPiece = Piece.NONE;
+                M.IsCastling = true;
+                addLegalMove(M);
+            }
+
+            // grand roque : b c d vides, e d c non attaquees (b peut etre attaquee, le roi ne la traverse pas)
+            if ((white ? state.WhiteGR : state.BlackGR)
+                && (AllOcc & (BitOperation.SetBit(0, (byte)b) | BitOperation.SetBit(0, (byte)c) | BitOperation.SetBit(0, (byte)d))) == 0
+                && !_CB.isSquareAttacked(FromSquare, state.Trait)
+                && !_CB.isSquareAttacked((byte)d, state.Trait)
+                && !_CB.isSquareAttacked((byte)c, state.Trait))
+            {
+                Move M = new Move();
+                M.From = (ChessEnum.Cases)FromSquare;
+                M.To = c;
+                M.Piece = ChessEnum.Piece.KING;
+                M.CapturedPiece = Piece.NONE;
+                M.IsCastling = true;
+                addLegalMove(M);
+            }
         }
         private void generateKnightMoves()
         {
@@ -313,12 +361,24 @@ namespace pignouf2.core
 
         private void generatePawnMovesAttackPEP(byte FromSquare)
         {
-            // pep possible si case pep conforme au pattern 'attaque simple 
-            if (_CB.getChessBoardState().PeP != Cases.none)
-            {
-                // todo 
-                // penser a attaque  et a la modif niveau make move
+            // pep possible si la case pep est une des cases d attaque du pion
+            ChessBoardState state = _CB.getChessBoardState();
+            if (state.PeP == Cases.none)
+                return;
 
+            ulong pattern = state.Trait == ChessEnum.Side.WHITE
+                ? BitMoveMask._PawnMoveMaskNorth[FromSquare]
+                : BitMoveMask._PawnMoveMaskSouth[FromSquare];
+
+            if ((pattern & BitOperation.SetBit(0, (byte)state.PeP)) != 0)
+            {
+                Move M = new Move();
+                M.From = (ChessEnum.Cases)FromSquare;
+                M.To = state.PeP;
+                M.Piece = ChessEnum.Piece.PAWN;
+                M.CapturedPiece = Piece.NONE; // la case d arrivee est vide, le pion pris est gere par IsEnPassant
+                M.IsEnPassant = true;
+                addLegalMove(M);
             }
         }
         private void generatePawnMovesAttack(byte FromSquare, bool isPromote)

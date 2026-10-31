@@ -18,6 +18,7 @@ namespace pignouf2.core
         public bool IsPromotion { get; set; }
         public ChessEnum.Piece PromotionPiece { get; set; }
         public bool IsCastling { get; set; }
+        public bool IsEnPassant { get; set; }
         public ChessEnum.Cases CaseEnPassant { get; set; }
         public bool IsDoublePawnPush { get; set; }
 
@@ -34,6 +35,7 @@ namespace pignouf2.core
             IsPromotion = false;
             PromotionPiece = ChessEnum.Piece.NONE;
             IsCastling = false;
+            IsEnPassant = false;
             CaseEnPassant = ChessEnum.Cases.none;
             IsDoublePawnPush = false;
         }
