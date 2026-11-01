@@ -9,7 +9,7 @@ namespace pignouf2
         static void Main(string[] args)
         {
             UCIManager uciManager = new UCIManager();
-            uciManager.Start();
+            uciManager.Start(args);
 
 
 

@@ -7,6 +7,8 @@ namespace pignouf2.search
         public int DefaultDepth = 4;
         public bool Infinite = false;
 
+        // flags pour les features ulterieures : tous desactives pour l instant,
+        // chaque feature s active en basculant le flag et en remplissant le hook correspondant
         public bool UseAlphaBeta = false;      // coupes alpha-beta dans Negamax
         public bool UseQuiescence = false;     // qsearch a depth 0 (effet horizon)
         public bool UseMoveOrdering = false;   // mvv-lva / killers / history dans OrderMoves

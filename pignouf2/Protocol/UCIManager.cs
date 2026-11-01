@@ -1,3 +1,4 @@
+using pignouf2.bench;
 using pignouf2.core;
 using pignouf2.search;
 using pignouf2.utils;
@@ -29,19 +30,33 @@ namespace pignouf2.Protocol
             }
         }
 
-        public void Start()
+        public void Start(string[] args)
         {
+            // si des arguments sont passes ils forment une commande : pignouf2.exe bench save test
+            if (args.Length > 0)
+            {
+                HandleLine(string.Join(" ", args));
+                return;
+            }
             while (true)
             {
                 string input = Console.ReadLine();
                 if (input == null)
                     return; // fin de stdin
-                string[] tokens = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                if (tokens.Length == 0)
-                    continue;
+                if (!HandleLine(input))
+                    return;
+            }
+        }
 
-                switch (tokens[0])
-                {
+        // traite une ligne de commande (stdin ou argument) ; retourne false pour quitter
+        private bool HandleLine(string input)
+        {
+            string[] tokens = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            if (tokens.Length == 0)
+                return true;
+
+            switch (tokens[0])
+            {
                     case "uci":
                         HandleUci();
                         break;
@@ -68,7 +83,7 @@ namespace pignouf2.Protocol
                         _stopRequested = true;
                         _searcher?.Stop();
                         _searchThread?.Join();
-                        return;
+                        return false;
                     // commandes debug hors uci
                     case "ShowBoard":
                         lock (_boardLock) { _pif.ShowBoard(); }
@@ -92,11 +107,47 @@ namespace pignouf2.Protocol
                     case "test":
                         test.PerftTest.ALLTest();
                         break;
+                    case "bench":
+                        {
+                            // bench [depth N] [save <nom>] : lance toujours perft + search a la profondeur demandee
+                            int benchDepth = Bench.DefaultSearchDepth;
+                            string name = null;
+                            for (int i = 1; i < tokens.Length; i++)
+                            {
+                                if (tokens[i] == "depth" && i + 1 < tokens.Length && int.TryParse(tokens[i + 1], out int d))
+                                    benchDepth = d;
+                                else if (tokens[i] == "save" && i + 1 < tokens.Length)
+                                    name = tokens[i + 1];
+                            }
+                            var lines = Bench.Run(benchDepth);
+                            foreach (var l in lines)
+                                Console.WriteLine(l);
+                            if (name != null)
+                                Bench.Save(name, lines);
+                            break;
+                        }
+                    case "sts":
+                        {
+                            // sts [depth N] [save <nom>] : test de force STS a profondeur fixe
+                            int stsDepth = Sts.DefaultDepth;
+                            string name = null;
+                            for (int i = 1; i < tokens.Length; i++)
+                            {
+                                if (tokens[i] == "depth" && i + 1 < tokens.Length && int.TryParse(tokens[i + 1], out int d))
+                                    stsDepth = d;
+                                else if (tokens[i] == "save" && i + 1 < tokens.Length)
+                                    name = tokens[i + 1];
+                            }
+                            var lines = Sts.Run(stsDepth, name);
+                            foreach (var l in lines)
+                                Console.WriteLine(l);
+                            break;
+                        }
                     default:
                         // commande inconnue : on ignore silencieusement (robustesse uci)
                         break;
-                }
             }
+            return true;
         }
 
         private void HandleUci()
