@@ -1,4 +1,5 @@
 using pignouf2.core;
+using pignouf2.search;
 using pignouf2.utils;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace pignouf2.Protocol
         private readonly object _boardLock = new object();
         private volatile bool _stopRequested;
         private Thread _searchThread;
-        private readonly Random _random = new Random();
+        private Searcher _searcher;
         private int _hashMb = 16;
         private int _moveOverheadMs = 50;
 
@@ -61,9 +62,11 @@ namespace pignouf2.Protocol
                         break;
                     case "stop":
                         _stopRequested = true;
+                        _searcher?.Stop();
                         break;
                     case "quit":
                         _stopRequested = true;
+                        _searcher?.Stop();
                         _searchThread?.Join();
                         return;
                     // commandes debug hors uci
@@ -190,36 +193,46 @@ namespace pignouf2.Protocol
 
         private void HandleGo(string[] tokens)
         {
-            // on parse les parametres mais pour l instant la "recherche" choisit un coup legal au hasard
-            bool infinite = tokens.Contains("infinite");
+            var options = new SearchOptions();
+            options.Infinite = tokens.Contains("infinite");
+            for (int i = 1; i < tokens.Length - 1; i++)
+            {
+                if (tokens[i] == "depth" && int.TryParse(tokens[i + 1], out int d))
+                    options.MaxDepth = d;
+            }
+            // wtime/btime/winc/binc/movetime/nodes : acceptes mais pour l instant on joue a profondeur fixe
             _stopRequested = false;
-            _searchThread = new Thread(() => Search(infinite));
+            Searcher searcher;
+            lock (_boardLock)
+            {
+                // la recherche tourne sur une copie du plateau : le thread d E/S reste libre
+                searcher = new Searcher(_pif.getChessBoard().Clone(), options, line => Console.WriteLine(line));
+            }
+            _searcher = searcher; // affecte AVANT de lancer le thread : un stop tot ne peut pas le rater
+            _searchThread = new Thread(() => RunSearch(searcher));
             _searchThread.IsBackground = true;
             _searchThread.Start();
         }
 
-        private void Search(bool infinite)
+        private void RunSearch(Searcher searcher)
         {
-            Move best;
-            lock (_boardLock)
+            var result = searcher.Search();
+            if (!result.HasBest)
             {
-                ChessBoard cb = _pif.getChessBoard();
-                var gen = new MoveGenerator(ref cb);
-                List<Move> moves = gen.generateALLMoves();
-                if (moves.Count == 0)
+                // mat/pat, ou stop avant la 1ere iteration complete : on prend le 1er coup legal
+                lock (_boardLock)
                 {
-                    // mat ou pat : plus aucun coup legal
-                    Console.WriteLine("bestmove 0000");
-                    return;
+                    ChessBoard cb = _pif.getChessBoard();
+                    var gen = new MoveGenerator(ref cb);
+                    var moves = gen.generateALLMoves();
+                    if (moves.Count > 0)
+                    {
+                        result.BestMove = moves[0];
+                        result.HasBest = true;
+                    }
                 }
-                best = moves[_random.Next(moves.Count)];
             }
-            if (infinite)
-            {
-                while (!_stopRequested)
-                    Thread.Sleep(10);
-            }
-            Console.WriteLine($"bestmove {best.UciEncode()}");
+            Console.WriteLine(result.HasBest ? $"bestmove {result.BestMove.UciEncode()}" : "bestmove 0000");
         }
     }
 }
