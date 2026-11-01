@@ -42,7 +42,26 @@ namespace pignouf2.core
 
         public string UciEncode()
         {
-            return this.From.ToString()+this.To.ToString();
+            // notation uci : minuscule, ex e2e4, promotion en 5e char ex e7e8q
+            string s = CaseToUci(From) + CaseToUci(To);
+            if (IsPromotion)
+            {
+                char p = PromotionPiece switch
+                {
+                    ChessEnum.Piece.ROOK => 'r',
+                    ChessEnum.Piece.BISHOP => 'b',
+                    ChessEnum.Piece.KNIGHT => 'n',
+                    _ => 'q',
+                };
+                s += p;
+            }
+            return s;
+        }
+
+        private static string CaseToUci(ChessEnum.Cases c)
+        {
+            int i = (int)c;
+            return "" + (char)('a' + i % 8) + (char)('1' + i / 8);
         }
         public override string ToString()
         {
